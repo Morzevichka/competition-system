@@ -3,13 +3,17 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/icon',
     '@nuxtjs/tailwindcss',
-    '@pinia/nuxt'
+    '@pinia/nuxt',
+    'nuxt-headlessui'
   ],
   css: ['@/assets/css/main.css'],
   runtimeConfig: {
     public: {
-      apiBase: "http://localhost:8080"
+      apiBase: "http://localhost:8081"
     }
+  },
+  headlessui: {
+    prefix: 'Headless'
   },
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true }

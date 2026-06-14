@@ -1,41 +1,53 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref } from 'vue';
+import { useAuthStore } from '~/store/auth';
+import { useAuth } from '~/composables/useAuth';
 
-const router = useRouter()
+definePageMeta({
+    middleware: ['not-auth']
+})
 
-const email = ref('')
-const login = ref('')
-const firstName = ref('')
-const lastName = ref('')
-const password = ref('')
-const repeatPassword = ref('')
+const auth = useAuth();
 
-const isLoggedIn = ref(false);
+const form = reactive({
+  email: '',
+  login: '',
+  firstName: '',
+  lastName: '',
+  password: '',
+  repeatPassword: ''
+});
 
-const showPassword = ref(false)
+const showPassword = ref(false);
 
-const loading = ref(false)
-const error = ref(null)
+const loading = ref(false);
+const error = ref(null);
 
 const handleRegister = async () => {
-    loading.value = true
-    error.value = null
+    loading.value = true;
+    error.value = null;
 
     try {
-        await router.push('/')
+        if (form.password !== form.repeatPassword) {
+            throw Error("Пароли не совпадают");
+        }
+
+        const payload = {
+            email: form.email,
+            login: form.login,
+            first_name: form.firstName,
+            last_name: form.lastName,
+            password: form.password
+        };
+
+        await auth.register(payload);
+        await navigateTo("/");
     } catch (e) {
-        error.value = 'Registration error'
+        error.value = e.data?.message || 'Something went wrong';
     } finally {
-        loading.value = false
+        loading.value = false;
     }
 }
-
-onMounted(() => {
-    if (isLoggedIn.value) {
-        router.push("/");
-    }
-});
 </script>
 
 <template>
@@ -56,7 +68,7 @@ onMounted(() => {
                         </p>
                     </div>
 
-                    <div v-if="error" class="text-sm text-on-error">
+                    <div v-if="error" class="text-sm text-error">
                         {{ error }}
                     </div>
 
@@ -70,7 +82,7 @@ onMounted(() => {
                                     class="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary-container transition-colors" />
 
                                 <input
-                                    v-model="email"
+                                    v-model="form.email"
                                     id="email"
                                     name="email"
                                     type="email"
@@ -91,7 +103,7 @@ onMounted(() => {
                                     class="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary-container transition-colors" />
 
                                 <input
-                                    v-model="login"
+                                    v-model="form.login"
                                     id="login"
                                     name="login"
                                     type="text"
@@ -112,7 +124,7 @@ onMounted(() => {
                                     class="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary-container transition-colors" />
 
                                 <input
-                                    v-model="firstName"
+                                    v-model="form.firstName"
                                     id="fname"
                                     name="fname"
                                     type="text"
@@ -133,7 +145,7 @@ onMounted(() => {
                                     class="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary-container transition-colors" />
 
                                 <input
-                                    v-model="lastName"
+                                    v-model="form.lastName"
                                     id="lname"
                                     name="lname"
                                     type="text"
@@ -154,7 +166,7 @@ onMounted(() => {
                                     class="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary-container transition-colors" />
 
                                 <input
-                                    v-model="password"
+                                    v-model="form.password"
                                     :type="showPassword ? 'text' : 'password'"
                                     placeholder="••••••••"
                                     class="w-full rounded-lg bg-surface-container border border-outline-variant/40
@@ -183,7 +195,7 @@ onMounted(() => {
                                     class="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary-container transition-colors" />
 
                                 <input
-                                    v-model="repeatPassword"
+                                    v-model="form.repeatPassword"
                                     :type="showPassword ? 'text' : 'password'"
                                     placeholder="••••••••"
                                     class="w-full rounded-lg bg-surface-container border border-outline-variant/40

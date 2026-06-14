@@ -1,58 +1,27 @@
 import { useAuthStore } from "~/store/auth";
-import { useAuthApi } from "./useAuthApi";
+import { useAuthApi } from "./api/useAuthApi";
+import type { User } from '~/types/user';
+import type { Login, Register } from "~/types/auth";
 
 export const useAuth = () => {
     const authStore = useAuthStore();
     const authApi = useAuthApi();
 
-    const login = async (email: string, password: string) => {
-        try {
-            const data: any = await authApi.login({ email, password });
-            authStore.setUser(data.user || data)
-        } catch (error: any) {
-            return { success: false, error: error.data?.message || 'Ошибка входа' }
-        }
+    const login = async (data: Login) => {
+        const result: User  = await authApi.login(data);
+        authStore.setUser(result);
+        return result;
     };
 
-    const register = async (
-        first_name: string,
-        last_name: string,
-        login: string,
-        email: string,
-        password: string,
-        repeat_password: string
-    ) => {
-        try {
-            const data: any = await authApi.register({
-                first_name,
-                last_name,
-                login,
-                email,
-                password,
-                repeat_password
-            });
-
-            authStore.setUser(data.user || data);
-        } catch (error: any) {
-            return { success: false, error: error.data?.message || 'Ошибка регистрации' }
-        }
-    };
-
-    const fetchUser = async () => {
-        try {
-            const data: any = await authApi.me()
-            authStore.setUser(data)
-            return data
-        } catch (error) {
-            authStore.clearAuth()
-            throw error
-        }
+    const register = async (data: Register) => {
+        const result: User = await authApi.register(data);
+        authStore.setUser(result);
+        return result;
     };
 
     const refresh = async () => {
         try {
-            const data = await authApi.refresh()
-            return data
+            await authApi.refresh()
         } catch (error) {
             authStore.clearAuth()
             throw error
@@ -67,5 +36,5 @@ export const useAuth = () => {
         }
     };
 
-    return { login, register, fetchUser, logout };
+    return { login, register, refresh, logout };
 };

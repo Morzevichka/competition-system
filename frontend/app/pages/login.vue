@@ -1,33 +1,42 @@
 <script setup>
-import { ref, onMounted } from "vue"
+import { ref } from "vue";
+import { useAuth } from "@/composables/useAuth";
 
-const email = ref("")
-const password = ref("")
-const loading = ref(false)
-const error = ref(null)
+definePageMeta({
+    middleware: ['not-auth']
+})
 
-const showPassword = ref(false)
+const auth = useAuth();
 
-const isLoggedIn = ref(false)
+const form = reactive({
+  email: '',
+  password: ''
+});
+
+const loading = ref(false);
+const error = ref(null);
+
+const showPassword = ref(false);
 
 const handleLogin = async () => {
     loading.value = true
     error.value = null
 
     try {
-        await navigateTo("/")
-    } catch (e) {
-        error.value = "Invalid credentials"
-    } finally {
-        loading.value = false
-    }
-}
+        const payload = {
+            email: form.email,
+            password: form.password
+        };
 
-onMounted(async () => {
-    if (isLoggedIn.value) {
-        await navigateTo("/")
+        await auth.login(payload);
+
+        await navigateTo("/");
+    } catch (e) {
+        error.value = e.data?.message || "Something went wrong";
+    } finally {
+        loading.value = false;
     }
-})
+};
 </script>
 
 <template>
@@ -48,7 +57,7 @@ onMounted(async () => {
                         </p>
                     </div>
 
-                    <div v-if="error" class="text-sm text-on-error">
+                    <div v-if="error" class="text-sm text-error">
                         {{ error }}
                     </div>
 
@@ -64,7 +73,7 @@ onMounted(async () => {
                                     class="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary-container transition-colors" />
 
                                 <input 
-                                    v-model="email" 
+                                    v-model="form.email" 
                                     id="email" 
                                     name="email" 
                                     type="email" 
@@ -94,7 +103,7 @@ onMounted(async () => {
                                 <Icon name="material-symbols:lock"
                                     class="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary-container transition-colors" />
 
-                                <input v-model="password" :type="showPassword ? 'text' : 'password'"
+                                <input v-model="form.password" :type="showPassword ? 'text' : 'password'"
                                     placeholder="••••••••" class="w-full rounded-lg bg-surface-container border border-outline-variant/40
                                     text-on-surface placeholder:text-on-surface-variant/50
                                     py-3 pl-10 pr-10

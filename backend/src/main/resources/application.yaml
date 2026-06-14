@@ -1,3 +1,46 @@
 spring:
   application:
     name: competition-system
+
+  flyway:
+    locations: classpath:db/migration
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/${DB_DATABASE}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+  threads:
+    virtual:
+      enabled: true
+  web:
+    error:
+      include-stacktrace: never
+      include-path: never
+
+server:
+  port: 8081
+
+application:
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET_KEY}
+      access-expiration: 86400000
+      refresh-expiration: 604800000
+
+springdoc:
+  api-docs:
+    path: /docs
+  swagger-ui:
+    path: /docs
+    operations-sorter: method
+
+logging:
+  level:
+    org.springframework.security: TRACE
+    org.springframework.web: TRACE
