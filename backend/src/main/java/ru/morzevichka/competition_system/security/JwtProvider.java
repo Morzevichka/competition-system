@@ -1,12 +1,14 @@
 package ru.morzevichka.competition_system.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.morzevichka.competition_system.exception.auth.JwtTypeException;
 import ru.morzevichka.competition_system.model.User;
 import ru.morzevichka.competition_system.model.UserRole;
 
@@ -35,7 +37,7 @@ public class JwtProvider {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public UUID extractUid(String token) {
+    public UUID extractUuid(String token) {
         return extractClaim(token, claims -> UUID.fromString(claims.get("uid").toString()));
     }
 
@@ -52,7 +54,7 @@ public class JwtProvider {
         return claimsResolver.apply(claims);
     }
 
-    private Claims extractAllClaims(String token) {
+    private Claims extractAllClaims(String token) throws JwtException {
         return Jwts
                 .parser()
                 .verifyWith(key)
@@ -68,7 +70,7 @@ public class JwtProvider {
         return generateToken(extraClaims, user.getEmail());
     }
 
-    public String generateToken(Map<String, Object> extraClaims, String username) {
+    private String generateToken(Map<String, Object> extraClaims, String username) {
         return buildToken(extraClaims, username, properties.getAccessExpiration(), TokenType.ACCESS);
     }
 
@@ -92,11 +94,15 @@ public class JwtProvider {
                 .compact();
     }
 
-    public boolean isTokenValid(String token) {
-        return extractTokenType(token).equals(TokenType.ACCESS);
+    public void isTokenValid(String token) {
+        if (!extractTokenType(token).equals(TokenType.ACCESS)) {
+            throw new JwtTypeException("Invalid JWT Token Type");
+        }
     }
 
-    public boolean isRefreshTokenValid(String refreshToken) {
-        return extractTokenType(refreshToken).equals(TokenType.REFRESH);
+    public void isRefreshTokenValid(String token) {
+        if (!extractTokenType(token).equals(TokenType.REFRESH)) {
+            throw new JwtTypeException("Invalid JWT Token Type");
+        }
     }
 }

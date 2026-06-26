@@ -30,15 +30,8 @@ application:
   security:
     jwt:
       secret-key: ${JWT_SECRET_KEY}
-      access-expiration: 86400000
+      access-expiration: 60000
       refresh-expiration: 604800000
-
-springdoc:
-  api-docs:
-    path: /docs
-  swagger-ui:
-    path: /docs
-    operations-sorter: method
 
 logging:
   level:

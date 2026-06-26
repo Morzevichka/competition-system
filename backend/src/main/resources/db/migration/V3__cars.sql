@@ -1,0 +1,4 @@
+CREATE TABLE cars (
+    id UUID PRIMARY KEY,
+    title VARCHAR(255) NOT NULL UNIQUE
+);

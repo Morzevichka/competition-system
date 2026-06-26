@@ -1,13 +1,14 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
-import { useAuthStore } from '~/store/auth';
 import { useAuth } from '~/composables/useAuth';
+import { useErrorHandler } from "~/composables/useErrorHandler";
 
 definePageMeta({
     middleware: ['not-auth']
 })
 
 const auth = useAuth();
+const errorHandler = useErrorHandler();
 
 const form = reactive({
   email: '',
@@ -18,14 +19,14 @@ const form = reactive({
   repeatPassword: ''
 });
 
-const showPassword = ref(false);
+const showPassword = ref<boolean>(false);
 
-const loading = ref(false);
-const error = ref(null);
+const loading = ref<boolean>(false);
+const error = ref<string>('');
 
 const handleRegister = async () => {
     loading.value = true;
-    error.value = null;
+    error.value = '';
 
     try {
         if (form.password !== form.repeatPassword) {
@@ -42,8 +43,8 @@ const handleRegister = async () => {
 
         await auth.register(payload);
         await navigateTo("/");
-    } catch (e) {
-        error.value = e.data?.message || 'Something went wrong';
+    } catch (e: any) {
+        error.value = errorHandler.handle(e);
     } finally {
         loading.value = false;
     }
@@ -55,7 +56,7 @@ const handleRegister = async () => {
         <div class="w-full max-w-[440px]">
 
             <div class="relative overflow-hidden rounded-xl border border-outline-variant/40 shadow-xl">
-                <div class="absolute top-0 left-0 right-0 h-1 bg-primary-container" />
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-light-cyan-200 to-light-cyan-400" />
 
                 <div class="p-6 md:p-8 space-y-4">
 
@@ -209,14 +210,14 @@ const handleRegister = async () => {
                         <button
                             type="submit"
                             :disabled="loading"
-                            class="w-full h-11 rounded-lg
-                                bg-primary-container text-on-primary-container font-medium
-                                hover:bg-primary hover:text-on-primary transition-colors
-                                disabled:opacity-60 disabled:cursor-not-allowed"
+                            class="w-full py-3 rounded-lg
+                                bg-primary-container text-on-primary font-medium
+                                hover:bg-primary-hover-container hover:text-on-primary transition-colors
+                                disabled:opacity-40 disabled:cursor-not-allowed"
                         >
                             <span v-if="!loading">Регистрация</span>
 
-                            <span v-else class="flex items-center gap-2">
+                            <span v-else class="flex justify-center items-center gap-2">
                                 <svg class="w-5 h-5 animate-spin" viewBox="0 0 24 24">
                                     <circle cx="12" cy="12" r="10" fill="none"
                                         stroke="currentColor" stroke-width="4" opacity="0.25" />

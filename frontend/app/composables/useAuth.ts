@@ -1,5 +1,5 @@
 import { useAuthStore } from "~/store/auth";
-import { useAuthApi } from "./api/useAuthApi";
+import { useAuthApi } from "./api/client/useAuthApi";
 import type { User } from '~/types/user';
 import type { Login, Register } from "~/types/auth";
 
@@ -21,18 +21,20 @@ export const useAuth = () => {
 
     const refresh = async () => {
         try {
-            await authApi.refresh()
+            await authApi.refresh();
         } catch (error) {
-            authStore.clearAuth()
-            throw error
+            authStore.clearAuth();
+            throw error;
         }
     }
 
     const logout = async () => {
         try {
-            await authApi.logout()
+            await authApi.logout();
+            
         } finally {
-            authStore.clearAuth()
+            authStore.clearAuth();
+            await navigateTo('/login', { replace: true })
         }
     };
 

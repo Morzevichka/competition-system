@@ -12,6 +12,8 @@ const props = defineProps({
 const route = useRoute();
 const isHovered = ref(false);
 
+const competitionId = route.params.id;
+
 const isExpanded = computed(() => {
     return props.open || isHovered.value;
 })
@@ -35,14 +37,14 @@ const isCompetition = computed(() => {
                 : 'w-full -translate-x-full sm:translate-x-0'
         ]" @mouseenter="isHovered = true" @mouseleave="isHovered = false">
         <div class="flex flex-col py-6 gap-6" :class="open ? 'items-start px-6' : 'items-center'"">
-            <NuxtLink to=" /" class="group flex items-center gap-3 h-[16px]">
+            <NuxtLink to="/" class="group flex items-center gap-3 h-[16px]">
             <Icon name="icons8:finish-flag" class="text-on-surface-variant group-hover:text-primary-container" />
             <span v-if="isExpanded" class="text-on-surface-variant group-hover:text-primary-container">
                 Соревнования
             </span>
             </NuxtLink>
 
-            <NuxtLink to="/" class="group flex items-center gap-3 h-[16px]">
+            <NuxtLink to="/pilots" class="group flex items-center gap-3 h-[16px]">
                 <Icon name="boxicons:helmet-filled"
                     class="text-on-surface-variant group-hover:text-primary-container" />
                 <span v-if="isExpanded"
@@ -54,7 +56,7 @@ const isCompetition = computed(() => {
             <div v-if="isCompetition" class="flex-col flex gap-6" :class="open ? 'items-start' : 'items-center'"">
                 <div class=" h-px bg-outline-variant/50 mx-2" :class="isExpanded ? 'w-24' : 'w-8'" />
 
-                <NuxtLink to="/" class="group flex items-center gap-3 h-[16px]">
+                <NuxtLink :to="`/competitions/${competitionId}/partipiants`" class="group flex items-center gap-3 h-[16px]">
                     <Icon name="ic:round-people" class="text-on-surface-variant group-hover:text-primary-container" />
                     <span v-if="isExpanded"
                         class="text-on-surface-variant whitespace-nowrap group-hover:text-primary-container">
@@ -62,7 +64,7 @@ const isCompetition = computed(() => {
                     </span>
                 </NuxtLink>
 
-                <NuxtLink to="/" class="group flex items-center gap-3 h-[16px]">
+                <NuxtLink :to="`/competitions/${competitionId}/qualifications`" class="group flex items-center gap-3 h-[16px]">
                     <Icon name="grommet-icons:scorecard"
                         class="text-on-surface-variant group-hover:text-primary-container" />
                     <span v-if="isExpanded"
@@ -71,7 +73,7 @@ const isCompetition = computed(() => {
                     </span>
                 </NuxtLink>
 
-                <NuxtLink to="/" class="group flex items-center gap-3 h-[16px]">
+                <NuxtLink :to="`/competitions/${competitionId}/runs`" class="group flex items-center gap-3 h-[16px]">
                     <Icon name="hugeicons:traffic-jam-01"
                         class="text-on-surface-variant group-hover:text-primary-container" />
                     <span v-if="isExpanded"
@@ -80,17 +82,18 @@ const isCompetition = computed(() => {
                     </span>
                 </NuxtLink>
 
-                <NuxtLink to="/" class="group flex items-center gap-3 h-[16px]">
+                <NuxtLink :to="`/competitions/${competitionId}/results`" class="group flex items-center gap-3 h-[16px]">
                     <Icon name="carbon:result" class="text-on-surface-variant group-hover:text-primary-container" />
                     <span v-if="isExpanded"
                         class="text-on-surface-variant whitespace-nowrap group-hover:text-primary-container">
                         Результаты
                     </span>
                 </NuxtLink>
+
                 <div v-if="authStore.hasSystemRole" class="flex-col flex gap-6" :class="open ? 'items-start' : 'items-center'"">
                     <div class=" h-px bg-outline-variant/50 mx-2" :class="isExpanded ? 'w-24' : 'w-8'" />
 
-                    <NuxtLink v-if="authStore.hasAnyRole(['ADMIN', 'JUDGE'])" to="/"
+                    <NuxtLink v-if="authStore.hasAnyRole(['ADMIN', 'JUDGE'])" :to="`/competitions/${competitionId}/judge`"
                         class="group flex items-center gap-3 h-[16px]">
                         <Icon name="mingcute:whistle-fill" class="text-on-surface-variant group-hover:text-primary-container" />
                         <span v-if="isExpanded"
@@ -99,7 +102,7 @@ const isCompetition = computed(() => {
                         </span>
                     </NuxtLink>
 
-                    <NuxtLink v-if="authStore.isAdmin" to="/" class="group flex items-center gap-3 h-[16px]">
+                    <NuxtLink v-if="authStore.isAdmin" :to="`/competitions/${competitionId}/admin`" class="group flex items-center gap-3 h-[16px]">
                         <Icon name="eos-icons:admin" class="text-on-surface-variant group-hover:text-primary-container" />
                         <span v-if="isExpanded"
                             class="text-on-surface-variant whitespace-nowrap group-hover:text-primary-container">
@@ -107,7 +110,7 @@ const isCompetition = computed(() => {
                         </span>
                     </NuxtLink>
 
-                    <NuxtLink v-if="authStore.hasAnyRole(['ADMIN', 'STREAMER'])" to="/"
+                    <NuxtLink v-if="authStore.hasAnyRole(['ADMIN', 'STREAMER'])" :to="`/competitions/${competitionId}/stream`"
                         class="group flex items-center gap-3 h-[16px]">
                         <Icon name="mdi:twitch" class="text-on-surface-variant group-hover:text-primary-container" />
                         <span v-if="isExpanded"
@@ -123,19 +126,27 @@ const isCompetition = computed(() => {
             <div v-if="authStore.isAdmin" class="flex-col flex gap-6" :class="open ? 'items-start' : 'items-center'"">
                 <div class=" h-px bg-outline-variant/50 mx-2" :class="isExpanded ? 'w-24' : 'w-8'" />
 
-                <NuxtLink to="/pilots" class="group flex items-center gap-3 h-[16px]">
+                <NuxtLink to="/admin/pilots" class="group flex items-center gap-3 h-[16px]">
                     <Icon name="mdi:users" class="text-on-surface-variant group-hover:text-primary-container" />
                     <span v-if="isExpanded"
                         class="text-on-surface-variant whitespace-nowrap group-hover:text-primary-container">
-                        Пользователи
+                        Пилоты
                     </span>
                 </NuxtLink>
 
-                <NuxtLink to="/cars" class="group flex items-center gap-3 h-[16px]">
+                <NuxtLink to="/admin/cars" class="group flex items-center gap-3 h-[16px]">
                     <Icon name="mdi:car-outline" class="text-on-surface-variant group-hover:text-primary-container" />
                     <span v-if="isExpanded"
                         class="text-on-surface-variant whitespace-nowrap group-hover:text-primary-container">
                         Машины
+                    </span>
+                </NuxtLink>
+
+                <NuxtLink to="/admin/users" class="group flex items-center gap-3 h-[16px]">
+                    <Icon name="mdi:users" class="text-on-surface-variant group-hover:text-primary-container" />
+                    <span v-if="isExpanded"
+                        class="text-on-surface-variant whitespace-nowrap group-hover:text-primary-container">
+                        Пользователи
                     </span>
                 </NuxtLink>
             </div>

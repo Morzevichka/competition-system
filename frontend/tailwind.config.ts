@@ -1,5 +1,5 @@
 // tailwind.config.ts
-import type { Config } from 'tailwindcss'
+import type { Config } from 'tailwindcss';
 
 export default <Partial<Config>>{
   theme: {
@@ -20,45 +20,58 @@ export default <Partial<Config>>{
         'outline': '#849495',
         'outline-variant': '#3b494b',
 
-        'primary': '#dbfcff',
-        'primary-container': '#00f0ff',
-        'on-primary': '#00363a',
-        'on-primary-container': '#006970',
-
-        'secondary': '#d1bcff',
-        'secondary-container': '#7000ff',
-        'on-secondary': '#3c0090',
-        'on-secondary-container': '#ddcdff',
-
-        'tertiary': '#f5f5f5',
-        'tertiary-container': '#d9d9d9',
-        'on-tertiary': '#2f3131',
-        'on-tertiary-container': '#5d5f5f',
-
         'error': '#ffb4ab',
         'error-container': '#93000a',
         'on-error': '#690005',
         'on-error-container': '#ffdad6',
 
-        'surface-tint': '#00dbe9',
-        'inverse-surface': '#e3e0f3',
-        'inverse-on-surface': '#2f2f3d',
-        'inverse-primary': '#006970',
+        // disable opacity 0.4
 
-        'primary-fixed': '#7df4ff',
-        'primary-fixed-dim': '#00dbe9',
-        'on-primary-fixed': '#002022',
-        'on-primary-fixed-variant': '#004f54',
+        'primary': '#e5fdff',
+        
+        'primary-container': '#33eeff',
+        'primary-hover-container': '#66f2ff',
+        'primary-active-container': '#99f7ff',
+        'on-primary': '#002F33',
 
-        'secondary-fixed': '#e9ddff',
-        'secondary-fixed-dim': '#d1bcff',
-        'on-secondary-fixed': '#23005b',
-        'on-secondary-fixed-variant': '#5700c9',
+        'secondary-container': '#002f33',
+        'secondary-hover-container': '#005e66',
+        'secondary-active-container': '#008c99',
+        'on-secondary': '#ccfbff',
 
-        'tertiary-fixed': '#e2e2e2',
-        'tertiary-fixed-dim': '#c6c6c7',
-        'on-tertiary-fixed': '#1a1c1c',
-        'on-tertiary-fixed-variant': '#454747',
+        'tertiary-hover-container': '#002f33',
+        'tertiary-active-container': '#002f33',
+        'on-tertiary-active-container': '#66f2ff',
+        'on-tertiary': '#33eeff',
+
+        "light-cyan": {
+          "50": "#e5fdff",
+          "100": "#ccfbff",
+          "200": "#99f7ff",
+          "300": "#66f2ff",
+          "400": "#33eeff",
+          "500": "#00eaff",
+          "600": "#00bbcc",
+          "700": "#008c99",
+          "800": "#005e66",
+          "900": "#002f33",
+          "950": "#002124"
+        }
+
+        // 'primary': '#dbfcff',
+        // 'primary-container': '#00f0ff',
+        // 'on-primary': '#00363a',
+        // 'on-primary-container': '#003033',
+
+        // 'secondary': '#d1bcff',
+        // 'secondary-container': '#7000ff',
+        // 'on-secondary': '#3c0090',
+        // 'on-secondary-container': '#ddcdff',
+
+        // 'tertiary': '#f5f5f5',
+        // 'tertiary-container': '#d9d9d9',
+        // 'on-tertiary': '#2f3131',
+        // 'on-tertiary-container': '#5d5f5f',
       },
 
       fontFamily: {
@@ -66,14 +79,6 @@ export default <Partial<Config>>{
         headline: ['Anybody', 'system-ui', 'sans-serif'],
         body: ['"Hanken Grotesk"', 'system-ui', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'monospace'],
-      },
-
-      fontSize: {
-        'display-lg': ['64px', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
-        'headline-lg': ['32px', { lineHeight: '1.2' }],
-        'headline-lg-mobile': ['24px', { lineHeight: '1.2' }],
-        'body-md': ['16px', { lineHeight: '1.6' }],
-        'data-label': ['12px', { lineHeight: '1', letterSpacing: '0.1em' }],
       },
 
       spacing: {
@@ -85,7 +90,7 @@ export default <Partial<Config>>{
         6: '24px',
         8: '32px',
         12: '48px',
-        16: '64px',
+        16: '64px'
       },
 
       maxWidth: {

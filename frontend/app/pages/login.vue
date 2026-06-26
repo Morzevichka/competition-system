@@ -1,26 +1,28 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import { useAuth } from "@/composables/useAuth";
+import { useErrorHandler } from "~/composables/useErrorHandler";
 
 definePageMeta({
     middleware: ['not-auth']
 })
 
 const auth = useAuth();
+const errorHandler = useErrorHandler();
 
 const form = reactive({
   email: '',
   password: ''
 });
 
-const loading = ref(false);
-const error = ref(null);
+const loading = ref<boolean>(false);
+const error = ref<string>('');
 
-const showPassword = ref(false);
+const showPassword = ref<boolean>(false);
 
 const handleLogin = async () => {
-    loading.value = true
-    error.value = null
+    loading.value = true;
+    error.value = '';
 
     try {
         const payload = {
@@ -31,8 +33,8 @@ const handleLogin = async () => {
         await auth.login(payload);
 
         await navigateTo("/");
-    } catch (e) {
-        error.value = e.data?.message || "Something went wrong";
+    } catch (e: any) {
+        error.value = errorHandler.handle(e);
     } finally {
         loading.value = false;
     }
@@ -42,8 +44,8 @@ const handleLogin = async () => {
 <template>
     <div class="w-full flex justify-center items-center">
         <div class="w-full max-w-[440px]">
-            <div class="relative overflow-hidden rounded-xl border border-outline-variant/40 shadow-xlw">
-                <div class="absolute top-0 left-0 right-0 h-1 bg-primary-container" />
+            <div class="relative overflow-hidden rounded-xl border border-outline-variant/40 shadow-xl">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-light-cyan-200 to-light-cyan-400" />
 
                 <div class="p-6 md:p-8 space-y-4">
 
@@ -116,9 +118,9 @@ const handleLogin = async () => {
                             </div>
                         </div>
 
-                        <button type="submit" :disabled="loading" class="w-full h-11 rounded-lg
-                            bg-primary-container text-on-primary-container font-medium
-                            hover:bg-primary hover:text-on-primary transition-colors
+                        <button type="submit" :disabled="loading" class="w-full py-3 rounded-lg
+                            bg-primary-container text-on-primary font-medium
+                            hover:bg-primary-hover-container hover:text-on-primary transition-colors
                             disabled:opacity-60 disabled:cursor-not-allowed
                             flex items-center justify-center gap-2">
                             <span v-if="!loading">

@@ -4,9 +4,10 @@ import { useAuthStore } from '~/store/auth'
 import { useAuth } from '@/composables/useAuth';
 
 const authStore = useAuthStore();
+
 const auth = useAuth();
 
-defineProps({
+const props = defineProps({
     open: Boolean
 })
 
@@ -35,8 +36,20 @@ const logout = () => {
             </div>
 
             <div v-if="!authStore.isLoggedIn" class="flex gap-3">
-                <NuxtLink to="/register" class="btn">Register</NuxtLink>
-                <NuxtLink to="/login" class="btn-primary">Login</NuxtLink>
+                <NuxtLink to="/register" class="
+                    h-8 px-4 flex items-center justify-center rounded-lg
+                    border border-on-tertiary
+                    text-sm text-on-tertiary
+                    hover:bg-tertiary-hover-container hover:text-on-tertiary">
+                    Register
+                </NuxtLink>
+                <NuxtLink to="/login" class="
+                    h-8 px-4 flex items-center justify-center rounded-lg
+                    border border-outline-variant/40 bg-primary-container
+                    text-sm text-on-primary font-medium
+                    hover:bg-primary-hover-container hover:on-primary">
+                    Login
+                </NuxtLink>
             </div>
 
             <Menu v-else as="div" class="relative">
@@ -53,14 +66,14 @@ const logout = () => {
 
                     <MenuItem v-slot="{ active }">
                         <NuxtLink to="/account" class="block px-4 py-2 text-sm"
-                            :class="active ? 'bg-surface-container-low' : ''">
+                            :class="active ? 'bg-surface-container-high' : ''">
                             Аккаунт
                         </NuxtLink>
                     </MenuItem>
 
                     <MenuItem v-slot="{ active }">
                         <button @click="logout" class="w-full text-left px-4 py-2 text-sm text-red-400"
-                            :class="active ? 'bg-surface-container-low' : ''">
+                            :class="active ? 'bg-surface-container-high' : ''">
                             Выйти
                         </button>
                     </MenuItem>
